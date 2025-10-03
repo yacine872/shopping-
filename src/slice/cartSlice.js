@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const cartSlice = createSlice({
-  name: "cart",
+  name: 'cart',
   initialState: {
     itemsList: [],
     totalItems: 0,
@@ -30,7 +30,19 @@ const cartSlice = createSlice({
       }
     },
     removeFromCart(state, action) {
-      return 0;
+      const id = action.payload;
+      const itemDoesExist = state.itemsList.find((item) => item.id === id);
+
+      try {
+        itemDoesExist.quantity -= 1;
+        itemDoesExist.totalPrice -= itemDoesExist.price;
+        if (itemDoesExist.quantity === 0) {
+          state.itemsList = state.itemsList.filter((item) => item.id !== id);
+          state.totalItems -= 1;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 });
